@@ -29,15 +29,16 @@ class AuthService{
   // }
 
 
-  // String url ="http://0.0.0.0:3000";
-  // String imgurl ="http://0.0.0.0:3000/property/propImages";
+  String url ="http://0.0.0.0:3000";
+  String vtour ="http://0.0.0.0:3000";
+  String imgurl ="http://0.0.0.0:3000/property/propImages";
   // String url ="https://3ee2-102-0-0-246.ngrok-free.app";
 
   // String imgurl ="https://3ee2-102-0-0-246.ngrok-free.app/property/propImages";
   // String url ="https://zincokenya.co.ke/dev/famltd/svrfiles/index.php";
-  String url ="https://famlimited.co.ke/svrfiles/index.php";
-  String vtour = "https://famlimited.co.ke/";
-  String imgurl ="https://famlimited.co.ke/svrfiles/property/propImages";
+  // String url ="https://famlimited.co.ke/svrfiles/index.php";
+  // String vtour = "https://famlimited.co.ke/";
+  // String imgurl ="https://famlimited.co.ke/svrfiles/property/propImages";
   // String imgurl ="https://zincokenya.co.ke/dev/famltd/svrfiles/property/propImages";
 
   Map<String, String> headers = {

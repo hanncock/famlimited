@@ -22,7 +22,8 @@ class _ListingState extends State<Listing> {
 
   String formatPrice(int price) {
     if (price >= 1000000) {
-      return '${(price / 1000000).toStringAsFixed(1)} M';  // 2.5M
+      // return '${(price / 1000000).toStringAsFixed(1)} M';  // 2.5M
+      return '${(price / 1000000).toStringAsFixed(2)} M';  // 2.5M
     } else if (price >= 1000) {
       return '${(price / 1000).toStringAsFixed(0)} K';  // 250K
     } else {

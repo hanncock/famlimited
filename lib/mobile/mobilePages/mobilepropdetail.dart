@@ -74,6 +74,63 @@ class _MobilePropDetailState extends State<MobilePropDetail> {
                   fit: BoxFit.cover, // Adjust the image fit
                 ),
               ),
+              child:Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: (){
+
+                            if(currImgIndx >= 0){
+                              setState(() {
+                                currImgIndx = 0;
+                              });
+                            }else{
+                              setState(() {
+                                currImgIndx --;
+                              });
+
+                            }
+                          },
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor:Colors.black26,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(Icons.navigate_before_outlined,size: 60,color: Colors.white,),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: (){
+
+                            if (currImgIndx < images.length - 1) {
+                              setState(() {
+                                currImgIndx++;
+                              });
+                            } else {
+                              setState(() {
+                                currImgIndx = 0; // Reset to 0 to loop back to the first image
+                              });
+                            }
+                          },
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor:Colors.black26,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(Icons.navigate_next_outlined,size: 60,color: Colors.white,),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 5,),
             SingleChildScrollView(
