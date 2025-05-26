@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:famlimited/dispgal.dart';
+import 'package:famlimited/reusables/loading.dart';
 import 'package:famlimited/reusables/reuseconf.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,9 +66,10 @@ class _EventsState extends State<Events> {
                Container(
                  height: 500,
                  child: Center(
-                   child: Text('Events Coming Soon',style: TextStyle(
+                   child: LoadingSpinCircle(),
+                   /*child: Text('Events Coming Soon',style: TextStyle(
                      fontSize: 20
-                   ),),
+                   ),),*/
                  ),
                ) :Padding(
               padding: widget.mobile == "true"?  EdgeInsets.all(10.0) :EdgeInsets.only(top: 280),
@@ -134,7 +136,7 @@ class _EventsState extends State<Events> {
                                           letterSpacing: 2,
                                           fontWeight: FontWeight.w800
                                       ),),
-                                    e['featured'] == 'YES' ? SizedBox() : Padding(
+                                    e['featured'] == 'NO' ? SizedBox() : Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text('Coming Soon',
                                           style: TextStyle(

@@ -8,8 +8,10 @@ import 'package:flutter/widgets.dart';
 import 'dart:html' as html;
 
 import '../../controller.dart';
+import '../../reusables/shimmer.dart';
 import '../../ytube.dart';
-
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 
@@ -165,6 +167,28 @@ class _PropDetailState extends State<PropDetail> {
                         },
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                          width: 150,
+                          height: 100,
+
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: e.length > 30 ? e : "${auth.imgurl}/$e",
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Colors.grey.shade300,
+                                highlightColor: Colors.grey.shade100,
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              // errorWidget: (context, url, error) => Icon(Icons.error),
+                              errorWidget: (context, url, error) => RetryableImage(imagePath: "${auth.imgurl}/$e", baseUrl: "${auth.imgurl}/$e"),
+                            ),
+                          ),
+                        ),
+                        /*child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             image: DecorationImage(
@@ -174,7 +198,7 @@ class _PropDetailState extends State<PropDetail> {
                           ),
                           width: 150,
                           height: 120,
-                        ),
+                        ),*/
                       );
                     }).toList(),
                   )

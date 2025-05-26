@@ -254,8 +254,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../../reusables/reuseconf.dart';
+import '../../reusables/shimmer.dart';
 import '../../reusables/txtform.dart';
 import 'dart:html' as html;
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AddEvent extends StatefulWidget {
   const AddEvent({super.key});
@@ -337,6 +340,233 @@ class _AddEventState extends State<AddEvent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Add New Event'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text('Event Details', style: Theme.of(context).textTheme.titleLarge),
+                        SizedBox(height: 16),
+                        forms(
+                          hint: 'Event Title',
+                          label: "Event Name",
+                          txtcontroller: _propNameController,
+                          onChanged: (String value) {
+                            setState(() {
+                              _propNameController.text = value;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 12),
+                        forms(
+                          hint: 'Video Link',
+                          label: "Drive Video Link",
+                          txtcontroller: videolink,
+                          onChanged: (String value) {
+                            setState(() {
+                              videolink.text = value;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Text('Coming Soon:', style: TextStyle(fontWeight: FontWeight.w600)),
+                            SizedBox(width: 10),
+                            DropdownButton<String>(
+                              value: _selectedValue,
+                              items: ['YES', 'NO'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  _selectedValue = val!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Text('Images', style: TextStyle(fontWeight: FontWeight.w600)),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                    base64Image.isNotEmpty
+                        ? Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: base64Image.map((e) => Container(
+                            margin: EdgeInsets.all(2),
+                            width: 150,
+                            height: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  CachedNetworkImage(
+                                    imageUrl: e.length > 30 ? e : "${auth.imgurl}/$e",
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Container(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    // errorWidget: (context, url, error) => Icon(Icons.error),
+                                    errorWidget: (context, url, error) => RetryableImage(imagePath: "${auth.imgurl}/$e", baseUrl: "${auth.imgurl}/$e"),
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        var resu = await auth.delete(e['id'], 'api/property/proplisting/del', "$e");
+                                      },
+                                      child: Icon(Icons.close, color: Colors.redAccent),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )).toList(),
+                        ),
+                      ),
+                    )
+                        : Text('No image selected.'),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: pickImage,
+                          icon: Icon(Icons.image),
+                          label: Text('Choose Image'),
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[700]),
+                        ),
+                        Spacer(),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Map<String, dynamic> propdata = {
+                              "id": id,
+                              "propName": _propNameController.text,
+                              "videolink": videolink.text,
+                              "featured": _selectedValue,
+                              "type": type,
+                              "images": imguploads,
+                            };
+
+                            print(propdata);
+
+                            var resu = await auth.saveMany(propdata, '/api/property/proplisting/add');
+                            if (resu == 'success') {
+                              _propNameController.clear();
+                              videolink.clear();
+                              base64Image.clear();
+                              imguploads.clear();
+                              id = null;
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Event saved successfully.")));
+                              getProp();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          ),
+                          child: Text('Save Event'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Divider(),
+            Text('Event Listings', style: Theme.of(context).textTheme.titleLarge),
+            SizedBox(height: 10),
+            props.isNotEmpty
+                ? ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: props.length,
+              itemBuilder: (context, index) {
+                var e = props[index];
+                List<dynamic> img = e["images"] == null ? [] : jsonDecode(e["images"]);
+
+                return Card(
+                  elevation: 1,
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    leading: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: img.isNotEmpty
+                              ? NetworkImage("${auth.imgurl}/${img[0]}")
+                              : NetworkImage("http://example.com/default_image.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    title: Text(e['propName']),
+                    subtitle: Text("Featured: ${e['featured']}"),
+                    trailing: Wrap(
+                      spacing: 10,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit, color: Colors.green),
+                          onPressed: () {
+                            id = e['id'];
+                            _propNameController.text = e['propName'];
+                            videolink.text = e['videolink'] ?? '';
+                            base64Image = img;
+                            imguploads = img;
+                            setState(() {});
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            await auth.delete(e['id'], 'api/property/proplisting/del', null);
+                            getProp();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            )
+                : Center(child: Text("No events found.")),
+          ],
+        ),
+      ),
+    );
+  }
+
+/*  Widget build(BuildContext context) {
+    return Scaffold(
         body: Column(
             children: [
               SizedBox(height: 100,),
@@ -400,29 +630,83 @@ class _AddEventState extends State<AddEvent> {
                       // Text('${base64Image.length}'),
                       // Text('${imguploads.length}'),
 
-                      base64Image.isNotEmpty
-                          ? Row(
-                        children: base64Image.map((e) => Container(
-                          margin: EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: e.length>30 ? NetworkImage(e):NetworkImage("${auth.imgurl}/${e}"),
-                              // image: NetworkImage(e),//NetworkImage("${auth.imgurl}/${e}"),
-                              fit: BoxFit.cover, // Adjust the image fit
+                     *//* base64Image.isNotEmpty
+                          ? Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Row(
+                          children: base64Image.map((e) => Container(
+                            margin: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: e.length>30 ? NetworkImage(e):NetworkImage("${auth.imgurl}/${e}"),
+
+                                // image: NetworkImage(e),//NetworkImage("${auth.imgurl}/${e}"),
+                                fit: BoxFit.cover, // Adjust the image fit
+                              ),
                             ),
+                            child: InkWell(
+                                onTap: ()async{
+                                  var resu = await auth.delete(e['id'],'api/property/proplisting/del',"${e}");
+                                },
+                                child: Icon(Icons.close,color: Colors.redAccent,)),
+                            width: 150,
+                            height: 100,
+                            // child: Image.network(e),
+                          )).toList(),
+                        ),
+                      ) // Display image using base64 string
+                          : Text('No image selected'),*//*
+
+                      base64Image.isNotEmpty
+                          ? Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: base64Image.map((e) => Container(
+                              margin: EdgeInsets.all(2),
+                              width: 150,
+                              height: 100,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: e.length > 30 ? e : "${auth.imgurl}/$e",
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade300,
+                                        highlightColor: Colors.grey.shade100,
+                                        child: Container(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      // errorWidget: (context, url, error) => Icon(Icons.error),
+                                      errorWidget: (context, url, error) => RetryableImage(imagePath: "${auth.imgurl}/$e", baseUrl: "${auth.imgurl}/$e"),
+                                    ),
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          var resu = await auth.delete(e['id'], 'api/property/proplisting/del', "$e");
+                                        },
+                                        child: Icon(Icons.close, color: Colors.redAccent),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )).toList(),
                           ),
-                          child: InkWell(
-                              onTap: ()async{
-                                var resu = await auth.delete(e['id'],'api/property/proplisting/del',"${e}");
-                              },
-                              child: Icon(Icons.close,color: Colors.redAccent,)),
-                          width: 150,
-                          height: 100,
-                          // child: Image.network(e),
-                        )).toList(),
+                        ),
                       ) // Display image using base64 string
                           : Text('No image selected'),
+
+
+
 
                       InkWell(
                         onTap: (){
@@ -448,15 +732,19 @@ class _AddEventState extends State<AddEvent> {
                             "id": id,
                             "propName": _propNameController.text,
                             "videolink":videolink.text,
+                            "featured":_selectedValue,
                             "type":type,
                             "images":imguploads
                           };
+
+                          print(propdata);
                           var resu = await auth.saveMany(propdata,'/api/property/proplisting/add');
-                          // var resu = await auth.saveMany(propdata,'/api/property/proplisting/save');
-                          setState(() {
-                            returned = resu;
-                          });
                           // print(resu);
+                          // var resu = await auth.saveMany(propdata,'/api/property/proplisting/save');
+                          // setState(() {
+                          //   returned = resu;
+                          // });
+                          // // print(resu);
                           if(resu == 'success'){
                             _propNameController.clear();
                             videolink.clear();
@@ -481,8 +769,8 @@ class _AddEventState extends State<AddEvent> {
                     ],
                   ),
 
-                  /*Text('Listings',style: TextStyle(color: Colors.black),),
-          Text('${returned}'),*/
+                  *//*Text('Listings',style: TextStyle(color: Colors.black),),
+          Text('${returned}'),*//*
                   Divider(thickness: 0.5, color: Colors.black,),
                   Column(
                     children: [
@@ -549,5 +837,5 @@ class _AddEventState extends State<AddEvent> {
             ]
         )
     );
-  }
+  }*/
 }

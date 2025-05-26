@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../../reusables/loading.dart';
 import '../../reusables/reuseconf.dart';
+import '../../reusables/shimmer.dart';
 import '../../reusables/txtform.dart';
 import 'dart:html' as html;
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CreateProp extends StatefulWidget {
   const CreateProp({super.key});
@@ -20,47 +23,41 @@ class _CreatePropState extends State<CreateProp> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _ammenitiesController = TextEditingController();
-  final TextEditingController videolink = TextEditingController(); //https://drive.google.com/file/d/1OlGFd7FKTbSOzENB72lDgXyZzULxjJ-L/view?t=2
+  final TextEditingController videolink = TextEditingController();
   var _selectedValue = 'NO';
-
+  var type = 'Props';
 
   var id;
   List props = [];
   List base64Image = [];
   List imguploads = [];
   var returned;
-  var type  = 'Props';
-
 
   void pickImage() async {
     html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.accept = 'image/*'; // Accept only image files
+    uploadInput.accept = 'image/*';
     uploadInput.click();
 
-    // Wait for the file to be selected
     uploadInput.onChange.listen((e) async {
       final files = uploadInput.files;
       if (files!.isEmpty) return;
 
-      final file = files[0]!; // Get the selected file
+      final file = files[0]!;
       final reader = html.FileReader();
-      reader.readAsDataUrl(file); // Read the file as a data URL (Base64)
+      reader.readAsDataUrl(file);
 
       reader.onLoadEnd.listen((e) {
         final base64String = reader.result as String;
-        final mimeType = file.type;  // Extract the MIME type from the file
+        final mimeType = file.type;
 
-        // Ensure we are adding only the base64 encoded part of the Data URL
         final base64EncodedImage = base64String.split(',').last;
-
-        // Construct the full Data URL with MIME type and Base64 encoding
         final mimeTypeBase64String = 'data:$mimeType;base64,$base64EncodedImage';
 
         setState(() {
-          base64Image.add(mimeTypeBase64String); // Store the full Data URL with MIME type
-          if(id==null){
+          base64Image.add(mimeTypeBase64String);
+          if(id == null) {
             imguploads.add(mimeTypeBase64String);
-          }else{}  // Add the full Data URL with MIME type
+          }
         });
       });
     });
@@ -73,7 +70,6 @@ class _CreatePropState extends State<CreateProp> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -82,7 +78,6 @@ class _CreatePropState extends State<CreateProp> {
 
   @override
   void dispose() {
-    // Dispose controllers to free resources
     _propNameController.dispose();
     _locationController.dispose();
     _priceController.dispose();
@@ -95,299 +90,324 @@ class _CreatePropState extends State<CreateProp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 100,),
-          Column(
-            children: [
-              Row(
-                children: [
-                  forms(
-                    hint: 'Property/Land Name',
-                    label: "Property Name",
-                    txtcontroller: _propNameController,
-                    onChanged: (String value) {
-                      setState(() {
-                        _propNameController.text = value;
-                      });
-                    },
-                  ),
-                  forms(
-                    widthh: 200,
-                    hint: 'Location',
-                    label: "Location",
-                    txtcontroller: _locationController,
-                    onChanged: (String value) {
-                      setState(() {
-                        _locationController.text = value;
-                      });
-                    },
-                  ),
-                  forms(
-
-                    hint: 'Description',
-                    label: "Description",
-                    txtcontroller: _descriptionController,
-                    onChanged: (String value) {
-                      setState(() {
-                        _descriptionController.text = value;
-                      });
-                    },
-                  ),
-                  forms(
-                    widthh: 200,
-                    hint: 'Price',
-                    label: "Price",
-                    txtcontroller: _priceController,
-                    onChanged: (String value) {
-                      setState(() {
-                        _priceController.text = value;
-                      });
-                    },
-                  ),
-                  forms(
-                    hint: 'Ammenities',
-                    label: "Ammenities",
-                    txtcontroller: _ammenitiesController,
-                    onChanged: (String value) {
-                      setState(() {
-                        _ammenitiesController.text = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Coming Soon'),
-                      ),
-                      DropdownButton<String>(
-                        value: _selectedValue,
-                        items: <String>['YES', 'NO'].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedValue = newValue.toString();
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-
-                  forms(
-                    hint: 'Video Link',
-                    label: "Video Link",
-                    txtcontroller: videolink,
-                    onChanged: (String value) {
-                      setState(() {
-                        videolink.text = value;
-                      });
-                    },
-                  ),
-                ],
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Text('${base64Image.length}'),
-              // Text('${imguploads.length}'),
-
-              base64Image.isNotEmpty
-                  ? Container(
-                width: MediaQuery.of(context).size.width* 0.8,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                      children: base64Image.map((e) => Container(
-                        margin: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: e.length>30 ? NetworkImage(e):NetworkImage("${auth.imgurl}/${e}"),
-                            // image: NetworkImage(e),//NetworkImage("${auth.imgurl}/${e}"),
-                            fit: BoxFit.cover, // Adjust the image fit
+      appBar: AppBar(
+        title: Text('Add New Property'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Property Details', style: Theme.of(context).textTheme.titleLarge),
+                    SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: forms(
+                            hint: 'Property/Land Name',
+                            label: "Property Name",
+                            txtcontroller: _propNameController,
+                            onChanged: (String value) {
+                              setState(() {
+                                _propNameController.text = value;
+                              });
+                            },
                           ),
                         ),
-                        child: InkWell(
-                            onTap: ()async{
-                              var resu = await auth.delete(e['id'],'api/property/proplisting/del',"${e}");
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: forms(
+                            linecnt: 5,
+                            hint: 'Description',
+                            label: "Description",
+                            txtcontroller: _descriptionController,
+                            onChanged: (String value) {
+                              setState(() {
+                                _descriptionController.text = value;
+                              });
                             },
-                            child: Icon(Icons.close,color: Colors.redAccent,)),
-                        width: 150,
-                        height: 100,
-                        // child: Image.network(e),
-                      )).toList(),
-                                    ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: forms(
+                            hint: 'Location',
+                            label: "Location",
+                            txtcontroller: _locationController,
+                            onChanged: (String value) {
+                              setState(() {
+                                _locationController.text = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: forms(
+                            hint: 'Price',
+                            label: "Price",
+                            txtcontroller: _priceController,
+                            onChanged: (String value) {
+                              setState(() {
+                                _priceController.text = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ) // Display image using base64 string
-                  : Text('No image selected'),
-      
-              InkWell(
-                onTap: (){
-                  pickImage();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                          width: 1
-                      )
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Choose Image'),
-                  ),
-                ),
-              ),
-              // Image.file(_imageFile as File),
-              InkWell(
-                onTap: () async {
-                  showDialog(
-                      context: context,
-                      builder: (_) => Column(
-                        mainAxisAlignment:
-                        MainAxisAlignment.center,
-                        children: [
-                          LoadingSpinCircle(),
-                        ],
-                      ));
-                  Map propdata = {
-                    "id": id,
-                    "propName": _propNameController.text,
-                    "location": _locationController.text,
-                    "price": _priceController.text,
-                    "featured":_selectedValue,
-                    "description": _descriptionController.text,
-                    "ammenities":_ammenitiesController.text,
-                    "videolink":videolink.text,
-                    "type":type,
-                    "images":imguploads
-                  };
-                  var resu = await auth.saveMany(propdata,'/api/property/proplisting/add');
-                  // var resu = await auth.saveMany(propdata,'/api/property/proplisting/save');
-                  setState(() {
-                    returned = resu;
-                  });
-                  // print(resu);
-                  if(resu == 'success'){
-                    _propNameController.clear();
-                    _locationController.clear();
-                    _priceController.clear();
-                    _descriptionController.clear();
-                    _ammenitiesController.clear();
-                    videolink.clear();
-                    id = null;
-                    base64Image.clear();
-                    imguploads.clear();
-                    setState(() {});
-                  }
-                  getProp();
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Padding(
-                    padding:  EdgeInsets.symmetric(vertical: 12.0, horizontal: 20),
-                    child: Text('Save', style: TextStyle(color: Colors.white),),
-                  ),
-                ),
-              ),
-            ],
-          ),
-      
-          /*Text('Listings',style: TextStyle(color: Colors.black),),
-          Text('${returned}'),*/
-          Divider(thickness: 0.5, color: Colors.black,),
-          Column(
-            children: [
-              Container(
-                height: 400,
-                child: ListView.builder(
-      
-                  shrinkWrap: true,
-                    itemCount: props.length,
-                    itemBuilder: (context, index){
-                      var e = props[index];
-                      List<dynamic> img = e["images"] == null ? [] : jsonDecode(props[index]['images']); //= e["images"] == null ? null: props[index]['images'].split(',');
-                  return Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-
-                          id = e['id'];
-                          _propNameController.text = e['propName'];
-                          _locationController.text = e['location'];
-                          _descriptionController.text = e['description'];
-                          _priceController.text = e['price'];
-                          _selectedValue = e['featured'];
-                          _ammenitiesController.text = e['ammenities']??'';
-                          videolink.text = e['videolink']??'';
-                          imguploads = img;
-                          base64Image = img;
-                          setState(() {});
-                          print(e);
-                        },
+                    SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: forms(
+                            hint: 'Amenities',
+                            label: "Amenities",
+                            txtcontroller: _ammenitiesController,
+                            onChanged: (String value) {
+                              setState(() {
+                                _ammenitiesController.text = value;
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: forms(
+                            linecnt: 3,
+                            hint: 'Video Link',
+                            label: "Video Link",
+                            txtcontroller: videolink,
+                            onChanged: (String value) {
+                              setState(() {
+                                videolink.text = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Text('Coming Soon:', style: TextStyle(fontWeight: FontWeight.w600)),
+                        SizedBox(width: 10),
+                        DropdownButton<String>(
+                          value: _selectedValue,
+                          items: ['YES', 'NO'].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedValue = val!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text('Images', style: TextStyle(fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                    base64Image.isNotEmpty
+                        ? Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              height:80,
-                              width:80,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: img.isEmpty ? NetworkImage("http://example.com/default_image.png")  :
-                                    NetworkImage("${auth.imgurl}/${img[0]}"),
+                          children: base64Image.map((e) => Container(
+                            margin: EdgeInsets.all(2),
+                            width: 150,
+                            height: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  CachedNetworkImage(
+                                    imageUrl: e.length > 30 ? e : "${auth.imgurl}/$e",
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Container(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => RetryableImage(
+                                        imagePath: "${auth.imgurl}/$e",
+                                        baseUrl: "${auth.imgurl}/$e"
+                                    ),
                                   ),
-                                borderRadius: BorderRadius.circular(10),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        var resu = await auth.delete(e['id'], 'api/property/proplisting/del', "$e");
+                                      },
+                                      child: Icon(Icons.close, color: Colors.redAccent),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(width: 150, child: Text('${e['propName']}')),
-                            SizedBox(width: 100, child: Text('${e['location']}')),
-                            SizedBox(width: 250, child: Text('${e['ammenities']}')),
-                            SizedBox(width: 250, child: Text('${e['videolink']}')),
-                            SizedBox(
-                              width: 250,
-                              height: 100,
-                              child: SingleChildScrollView(
-                                  child: Text('${e['description']}', softWrap: true,)
-                              ),
-                            ),
-                            SizedBox(width: 250, child: Text('KES ${e['price']}')),
-                            e['featured'] == 'YES'? Icon(Icons.check_box,color: Colors.green,):Icon(Icons.check_box_outline_blank),
-                            InkWell(
-                                onTap: ()async{
-                                  print(e['id']);
-      
-                                  var resu = await auth.delete(e['id'],'api/property/proplisting/del',null);
-                                  print(resu);
-                                  getProp();
-                                },
-                                child: Icon(Icons.delete,color: Colors.red,))
-                          ],
+                          )).toList(),
                         ),
                       ),
-                      Divider(thickness: 1,),
-                    ],
-                  );
-                }),
-              )
-            ],
+                    )
+                        : Text('No image selected.'),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: pickImage,
+                          icon: Icon(Icons.image),
+                          label: Text('Choose Image'),
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[700]),
+                        ),
+                        Spacer(),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Map<String, dynamic> propData = {
+                              "id": id,
+                              "propName": _propNameController.text,
+                              "location": _locationController.text,
+                              "price": _priceController.text,
+                              "description": _descriptionController.text,
+                              "ammenities": _ammenitiesController.text,
+                              "videolink": videolink.text,
+                              "featured": _selectedValue,
+                              "type": type,
+                              "images": imguploads,
+                            };
 
-          )
-        ],
+                            var resu = await auth.saveMany(propData, '/api/property/proplisting/add');
+                            if (resu == 'success') {
+                              _propNameController.clear();
+                              _locationController.clear();
+                              _priceController.clear();
+                              _descriptionController.clear();
+                              _ammenitiesController.clear();
+                              videolink.clear();
+                              base64Image.clear();
+                              imguploads.clear();
+                              id = null;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Property saved successfully."))
+                              );
+                              getProp();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          ),
+                          child: Text('Save Property'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Property Listings', style: Theme.of(context).textTheme.titleLarge),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 400,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: props.length,
+                        itemBuilder: (context, index) {
+                          var prop = props[index];
+                          List<dynamic> img = prop["images"] == null ? [] : jsonDecode(prop['images']);
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  id = prop['id'];
+                                  _propNameController.text = prop['propName'];
+                                  _locationController.text = prop['location'];
+                                  _priceController.text = prop['price'];
+                                  _descriptionController.text = prop['description'];
+                                  _ammenitiesController.text = prop['ammenities'] ?? '';
+                                  videolink.text = prop['videolink'] ?? '';
+                                  _selectedValue = prop['featured'];
+                                  imguploads = img;
+                                  base64Image = img;
+                                  setState(() {});
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            prop['propName'] ?? '',
+                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            prop['location'] ?? '',
+                                            style: TextStyle(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 80,
+                                      width: 80,
+                                      margin: EdgeInsets.symmetric(horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: img.isEmpty
+                                              ? NetworkImage("http://example.com/default_image.png")
+                                              : NetworkImage("${auth.imgurl}/${img[0]}"),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () async {
+                                        var resu = await auth.delete(prop['id'], 'api/property/proplisting/del', null);
+                                        getProp();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

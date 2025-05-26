@@ -11,9 +11,10 @@ List images = [
   // 'thindigua_gardens.png',
   'Homepahe_1.jpg',
   'thindigua_gardens.png',
-  'Homepage2.jpg',
-  'homepage3.jpg',
-  'homepage4.jpg',
+  'RV1.jpg'
+  // 'Homepage2.jpg',
+  // 'homepage3.jpg',
+  // 'homepage4.jpg',
   // 'bg2.jpg',
   // 'bg3.jpg',
   // 'bg4.jpg',

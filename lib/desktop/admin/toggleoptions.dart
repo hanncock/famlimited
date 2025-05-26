@@ -54,7 +54,7 @@ class _TogleAdminState extends State<TogleAdmin> {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Addgallery() ));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddGallery() ));
                 },
                 child: Container(
                     decoration: BoxDecoration(
@@ -80,21 +80,21 @@ class _TogleAdminState extends State<TogleAdmin> {
                     child: Text('Add Event',style: TextStyle(fontSize: 20),)),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeImages() ));
-                },
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(width: 0.1)
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                    child: Text('Home Images',style: TextStyle(fontSize: 20),)),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: InkWell(
+            //     onTap: (){
+            //       Navigator.push(context, MaterialPageRoute(builder: (context) => HomeImages() ));
+            //     },
+            //     child: Container(
+            //         decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(5),
+            //             border: Border.all(width: 0.1)
+            //         ),
+            //         padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+            //         child: Text('Home Images',style: TextStyle(fontSize: 20),)),
+            //   ),
+            // ),
 
           ],
       ),

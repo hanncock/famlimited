@@ -78,7 +78,7 @@ class _DesktopContentsState extends State<DesktopContents> with SingleTickerProv
 
     getProperties().whenComplete((){
       // getHomeImages().whenComplete((){
-        chnagebg();
+      chnagebg();
       // });
     });
     super.initState();
@@ -110,7 +110,7 @@ class _DesktopContentsState extends State<DesktopContents> with SingleTickerProv
             Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("assets/images/${images[_currentImageIndex]}"), // Specify the image asset
+                    image: AssetImage("/images/${images[_currentImageIndex]}"), // Specify the image asset
                     fit: BoxFit.cover,  // Adjust the image fit
                   ),
                 ),
@@ -157,7 +157,7 @@ class _DesktopContentsState extends State<DesktopContents> with SingleTickerProv
                   ),
                 )
             )
-               /* :Container(
+            /* :Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage("${auth.imgurl}/${hmImages[_currentImageIndex]}"), // Specify the image asset
@@ -770,197 +770,3 @@ class _DesktopContentsState extends State<DesktopContents> with SingleTickerProv
     );
   }
 }
-
-/*
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:get/get.dart';
-import 'dart:html' as html;
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../controller.dart';
-import '../../reusables/reuseconf.dart';
-
-class DesktopContents extends StatefulWidget {
-  const DesktopContents({super.key});
-
-  @override
-  State<DesktopContents> createState() => _DesktopContentsState();
-}
-
-class _DesktopContentsState extends State<DesktopContents> with SingleTickerProviderStateMixin {
-  int _currentImageIndex = 0;
-  List props = [];
-  List hmImages = [];
-  bool _hover2 = false;
-  bool _hover3 = false;
-  bool _imagesLoaded = false;
-  bool _dataLoaded = false;
-
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  Timer? _imageRotationTimer;
-
-  // Precache images
-  Future<void> precacheBackgroundImages() async {
-    for (String image in images) {
-      await precacheImage(AssetImage("assets/images/$image"), context);
-    }
-    setState(() {
-      _imagesLoaded = true;
-    });
-  }
-
-  // Start background rotation only after images are loaded
-  void startBackgroundRotation() {
-    if (_imageRotationTimer != null) {
-      _imageRotationTimer!.cancel();
-    }
-
-    _imageRotationTimer = Timer.periodic(Duration(seconds: 5), (timer) {
-      if (mounted) {
-        setState(() {
-          _currentImageIndex = (_currentImageIndex + 1) % images.length;
-        });
-      }
-    });
-  }
-
-  // Fetch data only after images are loaded
-  Future<void> loadData() async {
-    try {
-      final propertiesResult = await auth.getvalues("property/proplisting/list?type=Props");
-      if (mounted) {
-        setState(() {
-          props = propertiesResult;
-          _dataLoaded = true;
-        });
-      }
-    } catch (e) {
-      print('Error loading properties: $e');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 775)
-    );
-
-    _animation = Tween<double>(begin: 920.0, end: 0.0).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.easeIn)
-    );
-
-    // Load images first, then start rotation and fetch data
-    precacheBackgroundImages().then((_) {
-      startBackgroundRotation();
-      loadData();
-    });
-  }
-
-  @override
-  void dispose() {
-    _imageRotationTimer?.cancel();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  // Extracted background container for better readability
-  Widget buildBackgroundContainer() {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/${images[_currentImageIndex]}"),
-          fit: BoxFit.cover,
-        ),
-      ),
-      margin: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Container(
-        color: Colors.black.withOpacity(0.5),
-        child: buildImageThumbnails(),
-      ),
-    );
-  }
-
-  // Extracted thumbnails for better organization
-  Widget buildImageThumbnails() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 50.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(''),
-          Container(
-              height: MediaQuery.of(context).size.height * 0.48,
-              decoration: BoxDecoration(
-                  color: Colors.black45,
-                  borderRadius: BorderRadius.circular(10)
-              ),
-              child: SingleChildScrollView(
-                primary: false,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: images.map((e) => buildThumbnail(e)).toList(),
-                ),
-              )
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget buildThumbnail(String image) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
-      child: Container(
-        width: 80,
-        height: (MediaQuery.of(context).size.height * 0.5)/5,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            image: AssetImage("assets/images/$image"),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Listen for back button
-    html.window.onPopState.listen((event) {
-      TapController().getView();
-      html.window.history.pushState(TapController().getView(), '', html.window.location.href);
-      TapController().changeView();
-    });
-
-    // Show loading indicator if images aren't loaded
-    if (!_imagesLoaded) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    return Stack(
-      children: [
-        Column(
-          children: [
-            buildBackgroundContainer(),
-            // Rest of your UI components...
-          ],
-        ),
-        // Your floating search bar...
-      ],
-    );
-  }
-}
- */
