@@ -115,7 +115,7 @@ class _EventsState extends State<Events> {
                             //     border: Border.all(width: 1, color: Colors.black12)
                             // ),
 
-                            decoration: BoxDecoration(
+                            /*decoration: BoxDecoration(
                               image: DecorationImage(
                                 image: NetworkImage("${auth.imgurl}/${img[0]}"),
                                 // image: AssetImage(
@@ -123,7 +123,17 @@ class _EventsState extends State<Events> {
                                 // Specify the image asset
                                 fit: BoxFit.fitWidth, // Adjust the image fit
                               ),
+                            ),*/
+                            decoration: BoxDecoration(
+                              color: (img.isEmpty || img[0].isEmpty) ? Colors.blueAccent.withOpacity(0.5) : null,
+                              image: (img.isNotEmpty && img[0].isNotEmpty)
+                                  ? DecorationImage(
+                                image: NetworkImage("${auth.imgurl}/${img[0]}"),
+                                fit: BoxFit.fitWidth,
+                              )
+                                  : null,
                             ),
+
                             child: Container(
                                 color: Colors.black26,
                                 child: Center(child: Column(
