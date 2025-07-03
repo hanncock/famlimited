@@ -86,7 +86,7 @@ class ContainerWithFourImages extends StatelessWidget {
           top: 0,
           left: 0,
           child: Image.asset(
-            'assets/images/outreach3.jpeg', // Replace with your image path
+            'assets/images/outreach3.webp', // Replace with your image path
             height: MediaQuery.of(context).size.height * 0.5 /2,
             width: MediaQuery.of(context).size.width * 0.4 /2,
             fit: BoxFit.cover,
@@ -97,7 +97,7 @@ class ContainerWithFourImages extends StatelessWidget {
           top: 0,
           right: 0,
           child: Image.asset(
-            'assets/images/outreach1.jpeg', // Replace with your image path
+            'assets/images/outreach1.webp', // Replace with your image path
             height: MediaQuery.of(context).size.height * 0.5 /2,
             width: MediaQuery.of(context).size.width * 0.4 /2,
             fit: BoxFit.cover,
@@ -108,7 +108,7 @@ class ContainerWithFourImages extends StatelessWidget {
           bottom: 0,
           left: 0,
           child: Image.asset(
-            'assets/images/outreach2.jpeg', // Replace with your image path
+            'assets/images/outreach2.webp', // Replace with your image path
             height: MediaQuery.of(context).size.height * 0.5 /2,
             width: MediaQuery.of(context).size.width * 0.4 /2,
             fit: BoxFit.cover,
@@ -119,7 +119,7 @@ class ContainerWithFourImages extends StatelessWidget {
           bottom: 0,
           right: 0,
           child: Image.asset(
-            'assets/images/farmoutreach.jpeg', // Replace with your image path
+            'assets/images/farmoutreach.webp', // Replace with your image path
             height: MediaQuery.of(context).size.height * 0.5 /2,
             width: MediaQuery.of(context).size.width * 0.4 /2,
             fit: BoxFit.cover,

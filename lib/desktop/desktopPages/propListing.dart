@@ -51,7 +51,7 @@ class _PropListingState extends State<PropListing> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("assets/images/bg4.jpg"), // Specify the image asset
+                    image: AssetImage("assets/images/bg4.webp"), // Specify the image asset
                     fit: BoxFit.cover,  // Adjust the image fit
                   ),
                 ),

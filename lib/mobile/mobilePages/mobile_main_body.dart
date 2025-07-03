@@ -181,7 +181,7 @@ class _MobilemainbodyState extends State<Mobilemainbody> {
                       bottomLeft: Radius.circular(10)
                   ),
                   image: DecorationImage(
-                    image: AssetImage("assets/images/whysus.jpg"), // Specify the image asset
+                    image: AssetImage("assets/images/whysus.webp"), // Specify the image asset
                     fit: BoxFit.cover,  // Adjust the image fit
                   ),
                 ),
@@ -245,7 +245,7 @@ class _MobilemainbodyState extends State<Mobilemainbody> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage("assets/images/farmoutreach.jpeg"), // Specify the image asset
+                    image: AssetImage("assets/images/farmoutreach.webp"), // Specify the image asset
                     fit: BoxFit.fill,  // Adjust the image fit
                   ),
                 ),

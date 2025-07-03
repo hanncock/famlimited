@@ -9,9 +9,9 @@ final AuthService auth = AuthService();
 
 List images = [
   // 'thindigua_gardens.png',
-  'Homepahe_1.jpg',
-  'thindigua_gardens.png',
-  'RV1.jpg'
+  'Homepahe_1.webp',
+  'thindigua_gardens.webp',
+  'RV1.webp'
   // 'Homepage2.jpg',
   // 'homepage3.jpg',
   // 'homepage4.jpg',
@@ -24,15 +24,15 @@ List services = [
 
   {
     "serviceTitle":"Rafiki Gardens",
-    "image":"trees.jpg"
+    "image":"trees.webp"
   },
   {
     "serviceTitle":"Ruiru Villas",
-    "image":"homepage4.jpg"
+    "image":"homepage4.webp"
   },
   {
     "serviceTitle":"Thindigua Gardens",
-    "image":"thindigua_gardens.png"
+    "image":"thindigua_gardens.webp"
   },
  /* {
     "serviceTitle":"Farm Outreach",

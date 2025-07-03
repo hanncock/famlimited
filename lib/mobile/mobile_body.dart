@@ -108,7 +108,7 @@ class _MobileBodyState extends State<MobileBody> {
         // final Uri whatsappUri = Uri.parse("https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
 
 
-        child: Image.asset("assets/images/whatsapp.png"),
+        child: Image.asset("assets/images/whatsapp.webp"),
       ),
 
       drawer: Container(
@@ -160,7 +160,7 @@ class _MobileBodyState extends State<MobileBody> {
             Container(
               width: 100,
               height: 50,
-              child: Center(child: Image.asset("assets/images/logo.jpg")),
+              child: Center(child: Image.asset("assets/images/logo.webp")),
             ),
             SizedBox(width: 10,),
 

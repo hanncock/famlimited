@@ -52,7 +52,7 @@ class _MobileAboutState extends State<MobileAbout> {
                 decoration: BoxDecoration(
                   color: Colors.black12,
                   image: DecorationImage(
-                    image: AssetImage("assets/images/bg4.jpg"), // Specify the image asset
+                    image: AssetImage("assets/images/bg4.webp"), // Specify the image asset
                     fit: BoxFit.cover,  // Adjust the image fit
                   ),
                 ),
@@ -135,7 +135,7 @@ class _MobileAboutState extends State<MobileAbout> {
                       Container(
                         width: 160,
                         height: 80,
-                        child: Image.asset("assets/images/signature.png",
+                        child: Image.asset("assets/images/signature.webp",
                           fit: BoxFit.fill,
                         ),
                       )

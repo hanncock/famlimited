@@ -38,7 +38,7 @@ class DektopFooter extends StatelessWidget {
           child: SizedBox(
             width: 100,
             height: 80,
-            child: Image.asset("assets/images/logo.jpg"),
+            child: Image.asset("assets/images/logo.webp"),
           ),
         ),
         SocialMedia(),

@@ -30,10 +30,10 @@ class _DesktopBodyState extends State<DesktopBody> {
 
   ScrollController _scrollController = ScrollController();
   List images = [
-    'bg1.jpg',
-    'bg2.jpg',
-    'bg3.jpg',
-    'bg4.jpg',
+    'bg1.webp',
+    'bg2.webp',
+    'bg3.webp',
+    'bg4.webp',
   ];
 
 
@@ -155,7 +155,7 @@ class _DesktopBodyState extends State<DesktopBody> {
             launchwhtsapp(message);
           },
 
-        child: Image.asset("assets/images/whatsapp.png"),
+        child: Image.asset("assets/images/whatsapp.webp"),
       ),
       extendBody: true,
       body: GetBuilder<TapController>(
@@ -187,7 +187,7 @@ class _DesktopBodyState extends State<DesktopBody> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset("assets/images/logo.jpg"),
+                                Image.asset("assets/images/logo.webp"),
                                 IntrinsicHeight(
                                   child: Row(
                                     children: [

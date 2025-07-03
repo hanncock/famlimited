@@ -308,17 +308,17 @@ class _PropertyImageSliderState extends State<PropertyImageSlider> {
     {
       'id': 17381426846196,
       'propName': 'Ruiru Villas',
-      'images': ["img_bbd546820250129.jpeg"]
+      'images': ["img_bbd546820250129.webp"]
     },
     {
       'id': 17381428464858,
       'propName': 'Thindigua',
-      'images': ["img_70aee5b20250129.png"]
+      'images': ["img_70aee5b20250129.webp"]
     },
     {
       'id': 17381429608747,
       'propName': 'Ruiru Villas',
-      'images': ["img_14b080520250129.jpeg"]
+      'images': ["img_14b080520250129.webp"]
     },
   ];
 

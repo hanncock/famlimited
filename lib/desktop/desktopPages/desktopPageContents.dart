@@ -280,7 +280,7 @@ class _DesktopContentsState extends State<DesktopContents> with SingleTickerProv
                   height: 400,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/key.png"), // Specify the image asset
+                      image: AssetImage("assets/images/key.webp"), // Specify the image asset
                       fit: BoxFit.cover,  // Adjust the image fit
                     ),
                   ),
@@ -462,7 +462,7 @@ class _DesktopContentsState extends State<DesktopContents> with SingleTickerProv
                           bottomLeft: Radius.circular(10)
                       ),
                       image: DecorationImage(
-                        image: AssetImage("assets/images/whysus.jpg"), // Specify the image asset
+                        image: AssetImage("assets/images/whysus.webp"), // Specify the image asset
                         fit: BoxFit.cover,  // Adjust the image fit
                       ),
                     ),
@@ -613,7 +613,7 @@ class _DesktopContentsState extends State<DesktopContents> with SingleTickerProv
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: AssetImage("assets/images/farmoutreach.jpeg"), // Specify the image asset
+                      image: AssetImage("assets/images/farmoutreach.webp"), // Specify the image asset
                       fit: BoxFit.fitWidth,  // Adjust the image fit
                     ),
                   ),

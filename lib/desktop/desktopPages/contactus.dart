@@ -44,7 +44,7 @@ class ContactUs extends StatelessWidget {
               decoration: BoxDecoration(
                 // borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: AssetImage("assets/images/whysus.jpg"), // Specify the image asset
+                  image: AssetImage("assets/images/whysus.webp"), // Specify the image asset
                   fit: BoxFit.cover,  // Adjust the image fit
                 ),
               ),

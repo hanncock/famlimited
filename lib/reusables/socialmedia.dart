@@ -6,19 +6,19 @@ class SocialMedia extends StatelessWidget {
 
   static const List<Map<String, String>> _socialMediaLinks = [
     {
-      "image": "fb.png",
+      "image": "fb.webp",
       "url_launch": "https://www.facebook.com/share/1F11S2ukH7/?mibextid=wwXIfr"
     },
     {
-      "image": "insta.png",
+      "image": "insta.webp",
       "url_launch": "https://www.instagram.com/fam_limited_global?igsh=MTFsdnMweDViZ2E4bQ%3D%3D&utm_source=qr"
     },
     {
-      "image": "tiktok.png",
+      "image": "tiktok.webp",
       "url_launch": "https://www.tiktok.com/@fam.limited.global?_t=ZM-8tDpp36UjKg&_r=1"
     },
     {
-      "image": "yt.png",
+      "image": "yt.webp",
     }
   ];
 

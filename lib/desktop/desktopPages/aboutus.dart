@@ -127,7 +127,7 @@ class _AboutUsState extends State<AboutUs> with TickerProviderStateMixin{
               decoration: BoxDecoration(
                 color: Colors.black12,
                 image: DecorationImage(
-                  image: AssetImage("assets/images/whysus.jpg"), // Specify the image asset
+                  image: AssetImage("assets/images/whysus.webp"), // Specify the image asset
                   fit: BoxFit.cover,  // Adjust the image fit
                 ),
               ),
